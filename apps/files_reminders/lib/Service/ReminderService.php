@@ -15,11 +15,14 @@ use OCA\FilesReminders\AppInfo\Application;
 use OCA\FilesReminders\Db\Reminder;
 use OCA\FilesReminders\Db\ReminderMapper;
 use OCA\FilesReminders\Exception\NodeNotFoundException;
+use OCA\FilesReminders\Exception\ReminderNotFoundException;
 use OCA\FilesReminders\Exception\UserNotFoundException;
 use OCA\FilesReminders\Model\RichReminder;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
+use OCP\ICache;
+use OCP\ICacheFactory;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -28,6 +31,9 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ReminderService {
+
+	private ICache $cache;
+
 	public function __construct(
 		protected IUserManager $userManager,
 		protected IURLGenerator $urlGenerator,
@@ -35,7 +41,9 @@ class ReminderService {
 		protected ReminderMapper $reminderMapper,
 		protected IRootFolder $root,
 		protected LoggerInterface $logger,
+		protected ICacheFactory $cacheFactory,
 	) {
+		$this->cache = $this->cacheFactory->createDistributed('files_reminders');
 	}
 
 	/**
@@ -93,8 +101,14 @@ class ReminderService {
 			$reminder->setUpdatedAt($now);
 			$reminder->setCreatedAt($now);
 			$this->reminderMapper->insert($reminder);
+			$this->cache->set("{$user->getUID()}-$fileId", $reminder);
 			return true;
 		}
+		$reminder->setDueDate($dueDate);
+		$reminder->setUpdatedAt($now);
+		$this->reminderMapper->update($reminder);
+		$this->cache->set("{$user->getUID()}-$fileId", $reminder);
+		return false;
 	}
 
 	/**
@@ -108,14 +122,14 @@ class ReminderService {
 	public function removeAllForNode(Node $node): void {
 		$reminders = $this->reminderMapper->findAllForNode($node);
 		foreach ($reminders as $reminder) {
-			$this->reminderMapper->delete($reminder);
+			$this->deleteReminder($reminder);
 		}
 	}
 
 	public function removeAllForUser(IUser $user): void {
 		$reminders = $this->reminderMapper->findAllForUser($user);
 		foreach ($reminders as $reminder) {
-			$this->reminderMapper->delete($reminder);
+			$this->deleteReminder($reminder);
 		}
 	}
 
@@ -147,6 +161,7 @@ class ReminderService {
 		try {
 			$this->notificationManager->notify($notification);
 			$this->reminderMapper->markNotified($reminder);
+			$this->cache->set("{$user->getUID()}-{$reminder->getFileId()}", $reminder);
 		} catch (Throwable $th) {
 			$this->logger->error($th->getMessage(), $th->getTrace());
 		}
@@ -158,7 +173,7 @@ class ReminderService {
 			->modify('-1 day');
 		$reminders = $this->reminderMapper->findNotified($buffer, $limit);
 		foreach ($reminders as $reminder) {
-			$this->reminderMapper->delete($reminder);
+			$this->deleteReminder($reminder);
 		}
 	}
 }
