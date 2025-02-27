@@ -101,6 +101,9 @@ class CalendarExportController extends OCSController {
 			default => 'text/calendar; charset=UTF-8'
 		};
 
-		return new StreamGeneratorResponse($this->exportService->export($calendar, $options), $contentType, Http::STATUS_OK, 0);
+		$response = new StreamGeneratorResponse($this->exportService->export($calendar, $options), $contentType, Http::STATUS_OK);
+		$response->cacheFor(0);
+
+		return $response;
 	}
 }
