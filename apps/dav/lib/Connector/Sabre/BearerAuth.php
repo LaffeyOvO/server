@@ -19,6 +19,7 @@ class BearerAuth extends AbstractBearer {
 		private IUserSession $userSession,
 		private ISession $session,
 		private IRequest $request,
+		private IConfig $config,
 		private string $principalPrefix = 'principals/users/',
 	) {
 		// setup realm
@@ -58,8 +59,12 @@ class BearerAuth extends AbstractBearer {
 	 */
 	public function challenge(RequestInterface $request, ResponseInterface $response): void {
 		// Legacy ownCloud clients still authenticate via OAuth2
+		$enableOcClients = $this->config->getSystemValueBool('oauth2.enable_oc_clients', false);
 		$userAgent = $request->getHeader('User-Agent');
-		if ($userAgent !== null && preg_match('/mirall.*ownCloud/', $userAgent)) {
+		if ($enableOcClients
+			&& $userAgent !== null
+			&& preg_match('/mirall.*ownCloud/', $userAgent)
+		) {
 			parent::challenge($request, $response);
 			return;
 		}
