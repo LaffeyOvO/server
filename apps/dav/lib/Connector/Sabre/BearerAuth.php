@@ -57,6 +57,13 @@ class BearerAuth extends AbstractBearer {
 	 * @param ResponseInterface $response
 	 */
 	public function challenge(RequestInterface $request, ResponseInterface $response): void {
+		// Legacy ownCloud clients still authenticate via OAuth2
+		$userAgent = $request->getHeader('User-Agent');
+		if ($userAgent !== null && preg_match('/mirall.*ownCloud/', $userAgent)) {
+			parent::challenge($request, $response);
+			return;
+		}
+
 		$response->setStatus(Http::STATUS_UNAUTHORIZED);
 	}
 }
