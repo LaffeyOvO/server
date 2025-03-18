@@ -61,10 +61,7 @@ class BearerAuth extends AbstractBearer {
 		// Legacy ownCloud clients still authenticate via OAuth2
 		$enableOcClients = $this->config->getSystemValueBool('oauth2.enable_oc_clients', false);
 		$userAgent = $request->getHeader('User-Agent');
-		if ($enableOcClients
-			&& $userAgent !== null
-			&& preg_match('/mirall.*ownCloud/', $userAgent)
-		) {
+		if ($enableOcClients && $userAgent !== null && str_contains($userAgent, 'mirall')) {
 			parent::challenge($request, $response);
 			return;
 		}
