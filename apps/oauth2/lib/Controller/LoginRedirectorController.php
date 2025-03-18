@@ -57,7 +57,7 @@ class LoginRedirectorController extends Controller {
 	 * @param string $client_id Client ID
 	 * @param string $state State of the flow
 	 * @param string $response_type Response type for the flow
-	 * @param string $redirect_uri URI to redirect after the flow (is only used for legacy oC clients)
+	 * @param string $redirect_uri URI to redirect to after the flow (is only used for legacy ownCloud clients)
 	 * @return TemplateResponse<Http::STATUS_OK, array{}>|RedirectResponse<Http::STATUS_SEE_OTHER, array{}>
 	 *
 	 * 200: Client not found

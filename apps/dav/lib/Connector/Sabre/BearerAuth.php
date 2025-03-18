@@ -7,6 +7,7 @@ namespace OCA\DAV\Connector\Sabre;
 
 use OCP\AppFramework\Http;
 use OCP\Defaults;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IUserSession;

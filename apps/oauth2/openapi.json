@@ -69,7 +69,7 @@
                     {
                         "name": "redirect_uri",
                         "in": "query",
-                        "description": "URI to redirect after the flow (is only used for legacy oC clients)",
+                        "description": "URI to redirect to after the flow (is only used for legacy ownCloud clients)",
                         "schema": {
                             "type": "string",
                             "default": ""

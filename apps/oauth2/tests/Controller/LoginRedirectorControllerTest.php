@@ -13,6 +13,7 @@ use OCA\OAuth2\Exceptions\ClientNotFoundException;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\ISession;
@@ -32,6 +33,7 @@ class LoginRedirectorControllerTest extends TestCase {
 	private IL10N&MockObject $l;
 	private ISecureRandom&MockObject $random;
 	private IAppConfig&MockObject $appConfig;
+	private IConfig&MockObject $config;
 
 	private LoginRedirectorController $loginRedirectorController;
 
@@ -45,6 +47,7 @@ class LoginRedirectorControllerTest extends TestCase {
 		$this->l = $this->createMock(IL10N::class);
 		$this->random = $this->createMock(ISecureRandom::class);
 		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->config = $this->createMock(IConfig::class);
 
 		$this->loginRedirectorController = new LoginRedirectorController(
 			'oauth2',
@@ -55,6 +58,7 @@ class LoginRedirectorControllerTest extends TestCase {
 			$this->l,
 			$this->random,
 			$this->appConfig,
+			$this->config,
 		);
 	}
 
