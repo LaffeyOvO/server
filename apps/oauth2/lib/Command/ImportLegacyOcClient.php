@@ -32,7 +32,7 @@ class ImportLegacyOcClient extends Command {
 
 	protected function configure(): void {
 		$this->setName('oauth2:import-legacy-oc-client');
-		$this->setDescription('Import a legacy Oauth2 client from an ownCloud instance and migrate it. The data is expected to be straight out of the database table oc_oauth2_clients.');
+		$this->setDescription('This command is only required to be run on instances which were migrated from ownCloud without the oauth2.enable_oc_clients system config! Import a legacy Oauth2 client from an ownCloud instance and migrate it. The data is expected to be straight out of the database table oc_oauth2_clients.');
 		$this->addArgument(
 			self::ARGUMENT_CLIENT_ID,
 			InputArgument::REQUIRED,
