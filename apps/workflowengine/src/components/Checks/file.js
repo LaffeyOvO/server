@@ -37,7 +37,7 @@ const FileChecks = [
 		class: 'OCA\\WorkflowEngine\\Check\\FileMimeType',
 		name: t('workflowengine', 'File MIME type'),
 		operators: stringOrRegexOperators,
-		component: FileMimeType,
+		webComponent: registerWebComponent(FileMimeType, 'oca-workflowengine-file_mime_type'),
 	},
 
 	{

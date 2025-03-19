@@ -137,7 +137,7 @@ export default {
 
 		if (this.currentWebComponent) {
 			console.error(this.$refs)
-			this.$refs.checkComponent.value = this.currentOption
+			this.$refs.checkComponent.modelValue = this.currentOption
 		} else if (this.currentOption?.component) {
 			// keeping this in an else for apps that try to be backwards compatible and may ship both
 			// to be removed in 03/2028
