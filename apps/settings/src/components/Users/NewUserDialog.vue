@@ -71,11 +71,11 @@
 					:multiple="true"
 					:taggable="true"
 					:required="!settings.isAdmin && !settings.isDelegatedAdmin"
-					:create-option="(value) => ({ name: value })"
-					@input="handleGroupInput"
+					:create-option="(value) => ({ id: value, name: value, isCreating: true })"
 					@search="searchGroups"
-					@option:created="createGroup" />
-					<!-- If user is not admin, he is a subadmin.
+					@option:created="createGroup"
+					@option:selected="options => addGroup(options.at(-1))" />
+					<!-- If user is not admin, they are a subadmin.
 						Subadmins can't create users outside their groups
 						Therefore, empty select is forbidden -->
 			</div>
@@ -271,15 +271,6 @@ export default {
 			}
 		},
 
-		handleGroupInput(groups) {
-			/**
-			 * Filter out groups with no id to prevent duplicate selected options
-			 *
-			 * Created groups are added programmatically by `createGroup()`
-			 */
-			 this.newUser.groups = groups.filter(group => Boolean(group.id))
-		},
-
 		async searchGroups(query, toggleLoading) {
 			if (this.promise) {
 				this.promise.cancel()
@@ -316,6 +307,21 @@ export default {
 				logger.error(t('settings', 'Failed to create group'), { error })
 			}
 			this.loading.groups = false
+		},
+
+		/**
+		 * Add user to group
+		 *
+		 * @param {object} group Group object
+		 */
+		async addGroup(group) {
+			if (group.isCreating) {
+				return
+			}
+			if (group.canAdd === false) {
+				return
+			}
+			this.newUser.groups.push(group)
 		},
 
 		/**
