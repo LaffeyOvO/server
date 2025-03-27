@@ -106,7 +106,7 @@ class ImportCalendar extends Command {
 		}
 		// evaluate if provided format is supported
 		if ($format !== null && !in_array($format, $this->importService::FORMATS, true)) {
-			throw new \InvalidArgumentException("Format <$format> is not valid.");
+			throw new InvalidArgumentException("Format <$format> is not valid.");
 		} else {
 			$options->setFormat($format ?? 'ical');
 		}
@@ -115,7 +115,7 @@ class ImportCalendar extends Command {
 		if ($location !== null) {
 			$input = fopen($location, 'r');
 			if ($input === false) {
-				throw new \InvalidArgumentException("Location <$location> is not valid. Can not open location for read operation.");
+				throw new InvalidArgumentException("Location <$location> is not valid. Can not open location for read operation.");
 			} else {
 				try {
 					$outcome = $this->importService->import($input, $calendar, $options);
@@ -126,7 +126,7 @@ class ImportCalendar extends Command {
 		} else {
 			$input = fopen('php://stdin', 'r');
 			if ($input === false) {
-				throw new \InvalidArgumentException('Can not open stdin for read operation.');
+				throw new InvalidArgumentException('Can not open stdin for read operation.');
 			} else {
 				try {
 					$tempPath = $this->tempManager->getTemporaryFile();

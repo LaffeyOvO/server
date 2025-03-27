@@ -59,9 +59,9 @@ class ExportService {
 	 */
 	private function exportStart(string $format): string {
 		return match ($format) {
-			'jcal' => '["vcalendar",[["version",{},"text","2.0"],["prodid",{},"text","-\/\/IDN nextcloud.com\/\/Calendar App\/\/EN"]],[',
-			'xcal' => '<?xml version="1.0" encoding="UTF-8"?><icalendar xmlns="urn:ietf:params:xml:ns:icalendar-2.0"><vcalendar><properties><version><text>2.0</text></version><prodid><text>-//IDN nextcloud.com//Calendar App//EN</text></prodid></properties><components>',
-			default => "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//IDN nextcloud.com//Calendar App//EN\n"
+			'jcal' => '["vcalendar",[["version",{},"text","2.0"],["prodid",{},"text","-\/\/IDN nextcloud.com\/\/Calendar Export\/\/EN"]],[',
+			'xcal' => '<?xml version="1.0" encoding="UTF-8"?><icalendar xmlns="urn:ietf:params:xml:ns:icalendar-2.0"><vcalendar><properties><version><text>2.0</text></version><prodid><text>-//IDN nextcloud.com//Calendar Export//EN</text></prodid></properties><components>',
+			default => "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//IDN nextcloud.com//Calendar Export//EN\n"
 		};
 	}
 

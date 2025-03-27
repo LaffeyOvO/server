@@ -54,11 +54,12 @@ class CalendarExportController extends OCSController {
 	 */
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT)]
 	#[ApiRoute(verb: 'POST', url: '/export', root: '/calendar')]
-	#[UserRateLimit(limit: 1, period: 60)]
+	#[UserRateLimit(limit: 60, period: 60)]
 	#[NoAdminRequired]
-	public function index(string $id, ?string $format = null, ?array $options = null, ?string $user = null) {
+	public function index(string $id, ?string $type = null, ?array $options = null, ?string $user = null) {
 		$userId = $user;
 		$calendarId = $id;
+		$format = $type;
 		$rangeStart = isset($options['rangeStart']) ? (string)$options['rangeStart'] : null;
 		$rangeCount = isset($options['rangeCount']) ? (int)$options['rangeCount'] : null;
 		// evaluate if user is logged in and has permissions

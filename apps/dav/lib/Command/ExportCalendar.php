@@ -69,7 +69,7 @@ class ExportCalendar extends Command {
 		$options = new CalendarExportOptions();
 		// evaluate if provided format is supported
 		if ($format !== null && !in_array($format, $this->exportService::FORMATS, true)) {
-			throw new \InvalidArgumentException("Format <$format> is not valid.");
+			throw new InvalidArgumentException("Format <$format> is not valid.");
 		} else {
 			$options->setFormat($format ?? 'ical');
 		}

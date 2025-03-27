@@ -66,11 +66,11 @@ class CalendarImportController extends OCSController {
 		$format = isset($options['format']) ? $options['format'] : null;
 		$validation = isset($options['validation']) ? (int)$options['validation'] : null;
 		$errors = isset($options['errors']) ? (int)$options['errors'] : null;
-		$supersede = (bool)$options['supersede'] === true ? true : false;
-		$showCreated = (bool)$options['showCreated'] === true ? true : false;
-		$showUpdated = (bool)$options['showUpdated'] === true ? true : false;
-		$showSkipped = (bool)$options['showSkipped'] === true ? true : false;
-		$showErrors = (bool)$options['showErrors'] === true ? true : false;
+		$supersede = (bool)$options['supersede'] ?? false;
+		$showCreated = (bool)$options['showCreated'] ?? false;
+		$showUpdated = (bool)$options['showUpdated'] ?? false;
+		$showSkipped = (bool)$options['showSkipped'] ?? false;
+		$showErrors = (bool)$options['showErrors'] ?? false;
 		// evaluate if user is logged in and has permissions
 		if (!$this->userSession->isLoggedIn()) {
 			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
@@ -86,16 +86,16 @@ class CalendarImportController extends OCSController {
 		} else {
 			$userId = $this->userSession->getUser()->getUID();
 		}
-		// retrieve calendar and evaluate if export is supported
+		// retrieve calendar and evaluate if import is supported
 		$calendars = $this->calendarManager->getCalendarsForPrincipal('principals/users/' . $userId, [$calendarId]);
 		if ($calendars === []) {
 			return new DataResponse(['error' => 'calendar not found'], Http::STATUS_BAD_REQUEST);
 		}
 		$calendar = $calendars[0];
 		if (!$calendar instanceof ICalendarImport) {
-			return new DataResponse(['error' => 'calendar export not supported'], Http::STATUS_BAD_REQUEST);
+			return new DataResponse(['error' => 'calendar import not supported'], Http::STATUS_BAD_REQUEST);
 		}
-		// evaluate if requested format is supported and convert to output content type
+		// evaluate if requested format is supported
 		if ($format !== null && !in_array($format, $this->importService::FORMATS, true)) {
 			return new DataResponse(['error' => 'format invalid'], Http::STATUS_BAD_REQUEST);
 		} elseif ($format === null) {
